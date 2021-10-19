@@ -134,7 +134,7 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_tr-{args.trainset}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
+    pretrained_filename = f'pretrained_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
