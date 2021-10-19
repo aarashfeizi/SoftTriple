@@ -73,11 +73,11 @@ parser.add_argument('--test_name', default='test', type=str,
 
 
 def save_best_checkpoint(filename, model):
-    torch.save(model.state_dict(), 'results/' + filename + '.pt')
+    torch.save(model.state_dict(), 'results/' + filename + '.pth')
 
 
 def load_best_checkpoint(filename, model):
-    model.load_state_dict(torch.load('results/' + filename + '.pt'))
+    model.load_state_dict(torch.load('results/' + filename + '.pth'))
     model = model.cuda()
     return model
 
@@ -134,7 +134,7 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
+    pretrained_filename = f'pretrained_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
@@ -152,7 +152,10 @@ def main():
     nmi, recall = validate(test_loader, model, args)
     print('Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f} \n'
           .format(recall=recall, nmi=nmi))
+    results_text = 'Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f} \n'.format(recall=recall, nmi=nmi)
 
+    with open(f'./results/res_{pretrained_filename}.txt', 'w') as f:
+        f.write(results_text)
 
 def train(train_loader, model, criterion, optimizer, args):
     # switch to train mode
