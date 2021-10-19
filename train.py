@@ -24,7 +24,6 @@ import loss
 import evaluation as eva
 import net
 
-
 parser = argparse.ArgumentParser(description='PyTorch Training')
 parser.add_argument('data', help='path to dataset')
 parser.add_argument('-j', '--workers', default=2, type=int,
@@ -129,7 +128,7 @@ def main():
     # evaluate on validation set
     nmi, recall = validate(test_loader, model, args)
     print('Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f} \n'
-                  .format(recall=recall, nmi=nmi))
+          .format(recall=recall, nmi=nmi))
 
 
 def train(train_loader, model, criterion, optimizer, args):
@@ -175,7 +174,7 @@ def validate(test_loader, model, args):
 
 def adjust_learning_rate(optimizer, epoch, args):
     # decayed lr by 10 every 20 epochs
-    if (epoch+1)%20 == 0:
+    if (epoch + 1) % 20 == 0:
         for param_group in optimizer.param_groups:
             param_group['lr'] *= args.rate
 
