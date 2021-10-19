@@ -27,6 +27,7 @@ import loss
 import evaluation as eva
 import net
 import timm
+import torch.nn.functional as F
 
 parser = argparse.ArgumentParser(description='PyTorch Training')
 parser.add_argument('data', help='path to dataset')
@@ -175,6 +176,7 @@ def train(train_loader, model, criterion, optimizer, args):
 
         # compute output
         output = model(input)
+        output = F.normalize(output, p=2, dim=1)
         loss = criterion(output, target)
 
         # compute gradient and do SGD step
