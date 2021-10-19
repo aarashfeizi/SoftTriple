@@ -199,6 +199,7 @@ def validate(test_loader, model, args):
 
             # compute output
             output = model(input)
+            output = F.normalize(output, p=2, dim=1)
             testdata = torch.cat((testdata, output.cpu()), 0)
             testlabel = torch.cat((testlabel, target))
     nmi, recall = eva.evaluation(testdata.numpy(), testlabel.numpy(), [1, 2, 4, 8])
