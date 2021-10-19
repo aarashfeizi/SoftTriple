@@ -135,14 +135,14 @@ def main():
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
     pretrained_filename = f'pretrained_tr-{args.trainset}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
-    loss = np.Inf
+    myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
-            print('Training in Epoch[{}]'.format(epoch), f'Loss: {loss}')
+            print('Training in Epoch[{}]'.format(epoch), f'Loss: {myloss}')
             adjust_learning_rate(optimizer, epoch, args)
 
             # train for one epoch
-            loss = train(train_loader, model, criterion, optimizer, args)
+            myloss = train(train_loader, model, criterion, optimizer, args)
         save_best_checkpoint(filename=pretrained_filename, model=model)
     else:
         print(f'Not training, loading: {pretrained_filename}.pt')
