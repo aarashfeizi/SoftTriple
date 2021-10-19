@@ -62,6 +62,12 @@ parser.add_argument('-C', default=98, type=int,
                     help='C')
 parser.add_argument('-K', default=10, type=int,
                     help='K')
+parser.add_argument('--train_name', default='train', type=str,
+                    help='train dir name')
+parser.add_argument('--test_name', default='test', type=str,
+                    help='test dir name')
+
+
 
 
 def RGB2BGR(im):
@@ -86,8 +92,8 @@ def main():
     cudnn.benchmark = True
 
     # load data
-    traindir = os.path.join(args.data, 'train')
-    testdir = os.path.join(args.data, 'test')
+    traindir = os.path.join(args.data, args.train_name)
+    testdir = os.path.join(args.data, args.test_name)
     normalize = transforms.Normalize(mean=[104., 117., 128.],
                                      std=[1., 1., 1.])
 
