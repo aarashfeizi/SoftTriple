@@ -18,6 +18,7 @@ import torch.backends.cudnn as cudnn
 import torch.optim
 import torch.utils.data
 import torch.utils.data.distributed
+import torchvision
 import torchvision.transforms as transforms
 import torchvision.datasets as datasets
 import torch.nn as nn
@@ -25,6 +26,7 @@ from PIL import Image
 import loss
 import evaluation as eva
 import net
+import timm
 
 parser = argparse.ArgumentParser(description='PyTorch Training')
 parser.add_argument('data', help='path to dataset')
@@ -91,7 +93,8 @@ def main():
     args = parser.parse_args()
 
     # create model
-    model = net.bninception(args.dim)
+    # model = net.bninception(args.dim)
+    model = timm.create_model('resnet50', pretrained=True, num_classes=args.dim)
     torch.cuda.set_device(args.gpu)
     model = model.cuda()
 
@@ -134,7 +137,7 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}'
+    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
