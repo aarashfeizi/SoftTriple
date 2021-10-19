@@ -10,6 +10,8 @@
 
 import argparse
 import os
+
+import numpy as np
 import torch
 import torch.nn.parallel
 import torch.backends.cudnn as cudnn
@@ -133,13 +135,14 @@ def main():
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
     pretrained_filename = f'pretrained_tr-{args.trainset}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
+    loss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
-            print('Training in Epoch[{}]'.format(epoch))
+            print('Training in Epoch[{}]'.format(epoch), f'Loss: {loss}')
             adjust_learning_rate(optimizer, epoch, args)
 
             # train for one epoch
-            train(train_loader, model, criterion, optimizer, args)
+            loss = train(train_loader, model, criterion, optimizer, args)
         save_best_checkpoint(filename=pretrained_filename, model=model)
     else:
         print(f'Not training, loading: {pretrained_filename}.pt')
@@ -172,6 +175,8 @@ def train(train_loader, model, criterion, optimizer, args):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
+
+        return loss.data
 
 
 def validate(test_loader, model, args):
