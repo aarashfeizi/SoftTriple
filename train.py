@@ -62,13 +62,22 @@ parser.add_argument('-C', default=98, type=int,
                     help='C')
 parser.add_argument('-K', default=10, type=int,
                     help='K')
+parser.add_argument('--mode', default='train', type=str,
+                    choices=['train', 'test'])
 parser.add_argument('--train_name', default='train', type=str,
                     help='train dir name')
 parser.add_argument('--test_name', default='test', type=str,
                     help='test dir name')
 
 
+def save_best_checkpoint(filename, model):
+    torch.save(model.state_dict(), 'results/' + filename + '.pt')
 
+
+def load_best_checkpoint(filename, model):
+    model.load_state_dict(torch.load('results/' + filename + '.pt'))
+    model = model.cuda()
+    return model
 
 def RGB2BGR(im):
     assert im.mode == 'RGB'
@@ -123,13 +132,18 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
+    pretrained_filename = f'pretrained_tr-{args.trainset}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}.pth'
+    if args.mode == 'train':
+        for epoch in range(args.start_epoch, args.epochs):
+            print('Training in Epoch[{}]'.format(epoch))
+            adjust_learning_rate(optimizer, epoch, args)
 
-    for epoch in range(args.start_epoch, args.epochs):
-        print('Training in Epoch[{}]'.format(epoch))
-        adjust_learning_rate(optimizer, epoch, args)
-
-        # train for one epoch
-        train(train_loader, model, criterion, optimizer, args)
+            # train for one epoch
+            train(train_loader, model, criterion, optimizer, args)
+        save_best_checkpoint(filename=pretrained_filename, model=model)
+    else:
+        print(f'Not training, loading: {pretrained_filename}.pt')
+        model = load_best_checkpoint(filename=pretrained_filename, model=model)
 
     # evaluate on validation set
     nmi, recall = validate(test_loader, model, args)

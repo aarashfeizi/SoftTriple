@@ -20,6 +20,10 @@ python genCars.py
 python train.py --gpu 0 --dim 64 -C 98 --freeze_BN [folder with train and test folders]
 ```
 
+```
+python train.py --gpu 0 --dim 512 -C 2468 --freeze_BN --train_name train_small --test_name val1_small ../../datasets/hotels50k_v5_restructured/
+```
+
 ## Requirements
 * Python 3.7
 * PyTorch 1.1
