@@ -138,7 +138,7 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}-bs{args.batch_size}_lrm{args.modellr}_lrc{args.centerlr}'
+    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}-lambda{args.la}-bs{args.batch_size}_lrm{args.modellr}_lrc{args.centerlr}'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
