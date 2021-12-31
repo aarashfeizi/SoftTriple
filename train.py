@@ -37,13 +37,13 @@ parser.add_argument('--epochs', default=50, type=int,
                     help='number of total epochs to run')
 parser.add_argument('--start-epoch', default=0, type=int,
                     help='manual epoch number')
-parser.add_argument('-b', '--batch-size', default=32, type=int,
+parser.add_argument('-b', '--batch_size', default=32, type=int,
                     help='mini-batch size')
 parser.add_argument('--modellr', default=0.0001, type=float,
                     help='initial model learning rate')
 parser.add_argument('--centerlr', default=0.01, type=float,
                     help='initial center learning rate')
-parser.add_argument('--wd', '--weight-decay', default=1e-4, type=float,
+parser.add_argument('--wd', '--weight_decay', default=1e-4, type=float,
                     help='weight decay', dest='weight_decay')
 parser.add_argument('--gpu', default=None, type=int,
                     help='GPU id to use.')
@@ -138,7 +138,7 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}'
+    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}-bs{args.batch_size}_lrm{args.modellr}_lrc{args.centerlr}'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
