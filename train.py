@@ -153,10 +153,11 @@ def main():
         model = load_best_checkpoint(filename=pretrained_filename, model=model)
 
     # evaluate on validation set
-    nmi, recall = validate(test_loader, model, args)
-    print('Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f} \n'
-          .format(recall=recall, nmi=nmi))
-    results_text = 'Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f} \n'.format(recall=recall, nmi=nmi)
+    auc, nmi, recall = validate(test_loader, model, args)
+    print('Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f}; AUROC: {auc:.3f} \n'
+          .format(recall=recall, nmi=nmi, auc=auc))
+    results_text = 'Recall@1, 2, 4, 8: {recall[0]:.3f}, {recall[1]:.3f}, {recall[2]:.3f}, {recall[3]:.3f}; NMI: {nmi:.3f}; AUROC: {auc:.3f} \n'\
+        .format(recall=recall, nmi=nmi, auc=auc)
 
     with open(f'./results/res_{pretrained_filename}.txt', 'w') as f:
         f.write(results_text)
@@ -202,8 +203,8 @@ def validate(test_loader, model, args):
             output = F.normalize(output, p=2, dim=1)
             testdata = torch.cat((testdata, output.cpu()), 0)
             testlabel = torch.cat((testlabel, target))
-    nmi, recall = eva.evaluation(testdata.numpy(), testlabel.numpy(), [1, 2, 4, 8])
-    return nmi, recall
+    auc, nmi, recall = eva.evaluation(testdata.numpy(), testlabel.numpy(), [1, 2, 4, 8])
+    return auc, nmi, recall
 
 
 def adjust_learning_rate(optimizer, epoch, args):
