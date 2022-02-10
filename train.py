@@ -73,6 +73,8 @@ parser.add_argument('--train_name', default='train', type=str,
                     help='train dir name')
 parser.add_argument('--test_name', default='test', type=str,
                     help='test dir name')
+parser.add_argument('--x_name', default=None, type=str,
+                    help='extra name to be added')
 
 
 def save_best_checkpoint(filename, model):
@@ -138,7 +140,11 @@ def main():
         ])),
         batch_size=args.batch_size, shuffle=False,
         num_workers=args.workers, pin_memory=True)
-    pretrained_filename = f'pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}-lambda{args.la}-bs{args.batch_size}_lrm{args.modellr}_lrc{args.centerlr}'
+
+    extra_name = args.x_name
+    if extra_name is not None:
+        extra_name += '_'
+    pretrained_filename = f'{extra_name}pretrained_resnet50_tr-{args.train_name}_ep{args.epochs}-mg{args.margin}-dim{args.dim}-K{args.K}-lambda{args.la}-bs{args.batch_size}_lrm{args.modellr}_lrc{args.centerlr}'
     myloss = np.Inf
     if args.mode == 'train':
         for epoch in range(args.start_epoch, args.epochs):
