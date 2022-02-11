@@ -111,8 +111,13 @@ def main():
     # load data
     traindir = os.path.join(args.data, args.train_name)
     testdir = os.path.join(args.data, args.test_name)
-    normalize = transforms.Normalize(mean=[104., 117., 128.],
-                                     std=[1., 1., 1.])
+
+    normalize = transforms.Normalize(mean=[0.4620, 0.3980, 0.3292],
+                                     std=[0.2619, 0.2529, 0.2460])
+
+    # normalize = transforms.Normalize(mean=[104., 117., 128.],
+    #                                  std=[1., 1., 1.])
+
 
     train_dataset = datasets.ImageFolder(
         traindir,
@@ -121,7 +126,7 @@ def main():
             transforms.RandomResizedCrop(224),
             transforms.RandomHorizontalFlip(),
             transforms.ToTensor(),
-            transforms.Lambda(lambda x: x.mul(255)),
+            # transforms.Lambda(lambda x: x.mul(255)),
             normalize,
         ]))
 
@@ -135,7 +140,7 @@ def main():
             transforms.Resize(256),
             transforms.CenterCrop(224),
             transforms.ToTensor(),
-            transforms.Lambda(lambda x: x.mul(255)),
+            # transforms.Lambda(lambda x: x.mul(255)),
             normalize,
         ])),
         batch_size=args.batch_size, shuffle=False,
